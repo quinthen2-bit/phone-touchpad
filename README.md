@@ -1,37 +1,69 @@
 # Phone Touchpad
 
-> Teken met je telefoon op je pc: scan een QR-code en teken op een live screenshot van je scherm.
+**Control your PC's mouse by drawing directly on your phone.**
 
-Teken met je telefoon op je pc. Scan een QR-code, je ziet een live screenshot van je
-scherm op je telefoon en tekent er met je vinger direct op. Zodra je loslaat, wordt de
-hele streek in één keer op je pc getekend, met ingedrukte muisknop.
+Phone Touchpad lets you draw on a live screenshot of your PC screen using your phone's browser. Simply scan a QR code, open the interface, and draw with your finger. When you lift your finger, the entire stroke is sent to your PC and executed as a single continuous mouse operation.
 
-Handig voor tekenprogramma's, whiteboards, presentaties of annoteren op je scherm.
+Ideal for drawing applications, digital whiteboards, presentations, screen annotations, and other situations where precise mouse input is useful.
 
-## Functies
+## Download
 
-- Tekenen direct op de screenshot van je pc, zonder app op je telefoon (alleen een browser)
-- Eén request per streek in plaats van honderden losse muisberichten
-- Vloeiende lijnen: korte stukjes worden aangevuld en een trillende vinger wordt gladgestreken
-- Zijwaartse modus en volledig scherm voor een grotere screenshot
-- Witte rand met sluitknop (X) rond je scherm zodra je telefoon verbonden is
-- Werkt volledig lokaal: er gaat niets via het internet
+**[Download EXE here](https://drive.google.com/uc?export=download&id=1g_M5omC-LIHyX44J09H-nMS5AOpYX2M6)**
 
-## Hoe het werkt
+Download the Windows executable to get started without manually installing Python dependencies.
 
+## Features
+
+- **Browser-based control** — Draw on your PC directly from your phone, with no mobile app required.
+- **Live screen preview** — View screenshots of your PC screen on your phone.
+- **Efficient stroke transmission** — Sends one request per completed stroke instead of hundreds of individual mouse events.
+- **Smooth drawing** — Interpolates short segments and smooths shaky finger movements for more natural lines.
+- **Landscape mode** — Rotate the interface for a wider drawing area.
+- **Fullscreen mode** — Maximize the available screen space on your phone.
+- **Connection indicator** — A white overlay frame with a close button appears on your PC while a phone is connected.
+- **Local network operation** — Communication stays on your local network; no external internet connection is required for normal operation.
+
+## How It Works
+
+```text
+Phone (Web Browser)
+        |
+        | Wi-Fi / Local Network
+        v
+Flask Server on PC
+        |
+        +-- /screen.jpg
+        +-- /api/stroke
+        |
+        v
+PyAutoGUI
+        |
+        +-- Screen Capture
+        +-- Mouse Movement
+        +-- Mouse Button Control
+
+Tkinter
+        |
+        +-- QR Code Window
+        +-- Screen Overlay
 ```
-telefoon (browser)  ──wifi──▶  Flask-server op je pc  ──▶  pyautogui (muis + screenshot)
-  tekent op screenshot          /screen.jpg, /api/stroke       tkinter: QR-code + rand
-```
 
-1. Het programma start een webserver op poort 8765 en toont een QR-code.
-2. Je telefoon opent de link en haalt elke paar seconden een screenshot op.
-3. Je tekent op de telefoon. Bij loslaten gaat de hele streek in één request naar de pc.
-4. De pc zet de muisknop in, volgt alle punten en laat los.
+1. The application starts a local web server on port `8765` and displays a QR code.
+2. Your phone connects to the web interface and periodically retrieves a screenshot of your PC.
+3. You draw directly on the screenshot using your finger.
+4. When you lift your finger, the complete stroke is sent to the PC in a single request.
+5. The PC converts the stroke into mouse movements, holds the mouse button while drawing, and releases it when the stroke is complete.
 
-## Installatie
+## Requirements
 
-Vereist Python 3.9 of nieuwer met tkinter.
+- Python 3.9 or newer
+- Tkinter
+- A phone and PC connected to the same Wi-Fi network
+- The required Python packages listed in `requirements.txt`
+
+## Installation
+
+Clone the repository and install the dependencies:
 
 ```bash
 git clone https://github.com/The_Quinn4642/phone-touchpad.git
@@ -39,67 +71,112 @@ cd phone-touchpad
 python -m pip install -r requirements.txt
 ```
 
-Gebruik `python -m pip` zodat de libraries zeker in dezelfde Python komen als waarmee je
-het programma start (belangrijk als je meerdere Python-versies hebt).
+**Tip:** Use `python -m pip` instead of `pip` to ensure the packages are installed into the same Python environment used to run the application.
 
-## Gebruik
+## Usage
+
+Start the application:
 
 ```bash
 python phone_touchpad.py
 ```
 
-1. Zorg dat je telefoon en pc op **hetzelfde wifi-netwerk** zitten.
-2. Scan de QR-code met je telefoon.
-3. Teken op de screenshot. De knoppen onderaan zijn **Vernieuwen**, **Draai** (zijwaarts) en **Volledig scherm**.
-4. Sluit het programma met de **X** linksboven op je scherm.
+1. Make sure your phone and PC are connected to the **same Wi-Fi network**.
+2. Scan the displayed QR code with your phone.
+3. Open the link in your phone's browser.
+4. Draw directly on the screen preview.
 
-### Platformen
+The mobile interface includes the following controls:
 
-| Platform | Opmerkingen |
-|----------|-------------|
-| Windows  | Werkt direct. Sta de firewall-melding toe voor privénetwerken. |
-| macOS    | Geef je terminal (of de app) toegang onder *Systeeminstellingen → Privacy en beveiliging* bij **Toegankelijkheid** en **Schermopname**. |
-| Linux    | Alleen X11. Wayland wordt niet ondersteund door pyautogui. |
+- **Refresh** — Manually refresh the screen preview.
+- **Rotate** — Switch to landscape orientation.
+- **Fullscreen** — Expand the interface to use the available screen space.
 
-## Instellingen
+To close the application, use the **X button** in the top-left corner of the PC overlay.
 
-Bovenin `phone_touchpad.py`:
+## Supported Platforms
 
-| Instelling | Standaard | Omschrijving |
-|------------|-----------|--------------|
-| `PORT` | `8765` | Poort van de webserver |
-| `REFRESH_MS` | `8000` | Automatisch screenshot vernieuwen (ms), `0` = alleen handmatig |
-| `STEP_PX` | `3` | Maximale afstand tussen muispunten, kleiner = vloeiender |
-| `SMOOTH_WINDOW` | `3` | Gladstrijken tegen trillen, `1` = uit |
-| `STEP_DELAY` | `0.002` | Pauze tussen punten (sec), hoger = rustiger tekenen |
-| `FRAME_ALPHA` | `0.75` | Doorzichtigheid van de witte rand |
+| Platform | Support and Notes |
+|---|---|
+| Windows | Supported. Allow access through Windows Firewall on private networks when prompted. |
+| macOS | Requires Accessibility and Screen Recording permissions for the terminal or application. |
+| Linux | Supported under X11. Wayland is not supported by PyAutoGUI in this application. |
 
-## Veiligheid
+## Configuration
 
-- De link bevat een willekeurige token die bij elke start verandert. Wie de link heeft, kan **je muis besturen en je scherm zien**.
-- De verbinding is niet versleuteld (http). Gebruik het alleen op een netwerk dat je vertrouwt.
-- Zet poort 8765 nooit open naar het internet.
+You can adjust the following settings near the top of `phone_touchpad.py`.
 
-## Een los programma maken
+| Setting | Default | Description |
+|---|---:|---|
+| `PORT` | `8765` | Local web server port. |
+| `REFRESH_MS` | `8000` | Automatic screenshot refresh interval in milliseconds. Set to `0` for manual refresh only. |
+| `STEP_PX` | `3` | Maximum distance between generated mouse points. Lower values produce smoother, more detailed strokes. |
+| `SMOOTH_WINDOW` | `3` | Smoothing window for reducing shaky movements. Set to `1` to disable smoothing. |
+| `STEP_DELAY` | `0.002` | Delay between generated mouse points in seconds. Higher values may produce slower drawing. |
+| `FRAME_ALPHA` | `0.75` | Opacity of the PC overlay frame. |
 
-Windows (PyInstaller):
+## Security
+
+Phone Touchpad is designed for use on a trusted local network. Please keep the following security considerations in mind:
+
+- **Session token:** The access link contains a randomly generated token that changes each time the application starts.
+- **Mouse and screen access:** Anyone with a valid session link may be able to view your screen and control your mouse.
+- **Unencrypted connection:** Communication uses HTTP rather than HTTPS.
+- **Network restrictions:** Do not expose port `8765` directly to the public internet. Keep access restricted to trusted devices and networks.
+
+Only share the QR code or access link with people you trust.
+
+## Building a Windows Executable
+
+You can package the application into a standalone Windows executable using PyInstaller.
+
+Install PyInstaller:
 
 ```bash
 python -m pip install pyinstaller
+```
+
+Build the executable:
+
+```bash
 python -m PyInstaller --onefile --noconsole phone_touchpad.py
 ```
 
-Het resultaat staat in `dist/`.
+Once the build completes, the executable will be located in the `dist/` directory.
 
-## Problemen oplossen
+**Note:** Test the packaged executable on your target system. Depending on your environment, additional configuration may be needed to bundle all dependencies correctly.
 
-- **`No module named 'qrcode'`**: je installeert in een andere Python dan waarmee je draait. Gebruik `python -m pip install -r requirements.txt`.
-- **Telefoon kan niet verbinden**: controleer wifi (zelfde netwerk) en firewall.
-- **"Sessie verlopen"**: de token verandert bij elke start. Scan de QR-code opnieuw.
-- **Tekenen werkt niet op macOS**: controleer de rechten voor Toegankelijkheid en Schermopname.
+## Troubleshooting
 
-## Licentie
+**`ModuleNotFoundError: No module named 'qrcode'`**
 
-MIT, zie [LICENSE](LICENSE).
+Install the dependencies using the Python interpreter you use to launch the application:
 
-Gemaakt door [The_Quinn4642](https://github.com/The_Quinn4642).
+```bash
+python -m pip install -r requirements.txt
+```
+
+**My phone cannot connect**
+
+- Verify that both devices are connected to the same Wi-Fi network.
+- Check your Windows Firewall settings.
+- Make sure the application is running and displaying the correct QR code.
+- Check whether your router uses client isolation, which can prevent devices from communicating.
+
+**The session has expired**
+
+The session token changes every time the application starts. Scan the newly displayed QR code to reconnect.
+
+**Drawing does not work on macOS**
+
+Check that the application has the required Accessibility and Screen Recording permissions in **System Settings → Privacy & Security**.
+
+## License
+
+This project is licensed under the MIT License. See [`LICENSE`](LICENSE) for details.
+
+## Author
+
+Created by [The_Quinn4642](https://github.com/quinthen2-bit).
+
+If you find Phone Touchpad useful, consider giving the repository a ⭐ on GitHub.
