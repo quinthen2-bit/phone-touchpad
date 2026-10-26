@@ -1,5 +1,7 @@
 # Phone Touchpad
 
+**Note:** The application interface is currently in Dutch, while this README is written in English. Translating the in-app text is not essential for the application to function, as all core features work regardless of the language used for the interface.
+
 **Control your PC's mouse by drawing directly on your phone.**
 
 Phone Touchpad lets you draw on a live screenshot of your PC screen using your phone's browser. Simply scan a QR code, open the interface, and draw with your finger. When you lift your finger, the entire stroke is sent to your PC and executed as a single continuous mouse operation.
