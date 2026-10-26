@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+# Build-output (PyInstaller / py2app)
+build/
+dist/
+*.spec
+setup.py
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
